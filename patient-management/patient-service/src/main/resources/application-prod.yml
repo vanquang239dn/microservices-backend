@@ -1,0 +1,40 @@
+server:
+    port: ${PROD_SERVER_PORT}
+
+spring:
+    config:
+        activate:
+            on-profile: prod
+
+    web:
+        error:
+            include-message: never
+            include-stacktrace: never
+
+    datasource:
+        url: ${PROD_POSTGRES_URL}
+        username: ${PROD_POSTGRES_USERNAME}
+        password: ${PROD_POSTGRES_PASSWORD}
+
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        show-sql: false
+
+        properties:
+            hibernate:
+                format_sql: false
+
+    flyway:
+        baseline-on-migrate: true
+
+        # Disable clean production DB
+        clean-disabled: true
+
+    springdoc:
+        api-docs:
+            path: /v3/api-docs
+            enabled: false
+
+        swagger-ui:
+            enabled: false

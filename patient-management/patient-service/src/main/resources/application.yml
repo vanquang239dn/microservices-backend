@@ -1,0 +1,28 @@
+spring:
+    main:
+        banner-mode: console
+    application:
+        name: patient-service
+    profiles:
+        active: ${SPRING_PROFILES_ACTIVE:dev}
+    flyway:
+        enabled: true
+        locations: classpath:db/migration
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: health, info
+
+    tracing:
+        sampling:
+            probability: 1.0
+
+    endpoint:
+        health:
+            show-details: never
+
+logging:
+    level:
+        root: INFO
