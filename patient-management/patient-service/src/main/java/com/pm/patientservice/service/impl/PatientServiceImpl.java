@@ -92,7 +92,7 @@ public class PatientServiceImpl implements PatientService {
 
     }
 
-    public PatientResponse deletePatient(UUID patientId, PatientRequest req) {
+    public PatientResponse deletePatient(UUID patientId) {
 
         // Start deleting patient
         log.info("Start deleting patient with id = {}", patientId);
@@ -105,7 +105,7 @@ public class PatientServiceImpl implements PatientService {
         patientRepository.deleteById(patientId);
 
         // End deleting patient
-        log.info("End deleting patient with name={}", req.getName());
+        log.info("End deleting patient with id = {}", patientId);
 
         // Convert patient entity to response then return
         return PatientMapper.toResponse(deletePatient);
