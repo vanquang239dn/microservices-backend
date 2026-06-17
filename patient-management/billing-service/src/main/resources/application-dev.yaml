@@ -1,0 +1,49 @@
+server:
+    port: ${BILLING_SERVICE_DEV_PORT}
+
+spring:
+    config:
+        activate:
+            on-profile: dev
+
+    devtools:
+        add-properties: true
+
+    web:
+        error:
+            include-message: always
+            include-stacktrace: always
+
+    datasource:
+        url: ${DEV_POSTGRES_URL}
+        username: ${DEV_POSTGRES_USERNAME}
+        password: ${DEV_POSTGRES_PASSWORD}
+
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        show-sql: true
+
+        properties:
+            hibernate:
+                format_sql: true
+
+    grpc:
+        server:
+            port: 9001
+
+    springdoc:
+        api-docs:
+            path: /v3/api-docs
+            enabled: true
+
+        swagger-ui:
+            enabled: true
+
+openapi:
+    service:
+        api-docs: v3/api-docs
+        title: Billing Service API
+        description: API documentation for Billing Service
+        version: 1.0.0
+        server: ${OPENAPI_SERVER_URL:http://localhost:${server.port}}
