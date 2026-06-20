@@ -52,6 +52,6 @@ openapi:
     service:
         api-docs: v3/api-docs
         title: Patient Service API
-        description: API documentation for Backend Service
+        description: API documentation for Patient Service
         version: 1.0.0
         server: ${OPENAPI_SERVER_URL:http://localhost:${server.port}}
