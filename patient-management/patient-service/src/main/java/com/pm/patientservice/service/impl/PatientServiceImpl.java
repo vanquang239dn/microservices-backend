@@ -10,6 +10,8 @@ import com.pm.patientservice.dto.request.PatientRequest;
 import com.pm.patientservice.dto.response.PatientResponse;
 import com.pm.patientservice.exception.DuplicateResourceException;
 import com.pm.patientservice.exception.PatientNotFoundException;
+import com.pm.patientservice.grpc.BillingServiceGrpcClient;
+import com.pm.patientservice.kafka.KafkaProducer;
 import com.pm.patientservice.mapper.PatientMapper;
 import com.pm.patientservice.model.Patient;
 import com.pm.patientservice.repository.PatientRepository;
@@ -24,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
+    private final BillingServiceGrpcClient billingServiceGrpcClient;
+    private final KafkaProducer kafkaProducer;
 
     public List<PatientResponse> getPatients() {
 
@@ -56,6 +60,13 @@ public class PatientServiceImpl implements PatientService {
 
         // Convert patient request to patient entity then save to DB
         Patient newPatient = patientRepository.save(PatientMapper.toEntity(req));
+
+        // Create billing account via gRPC call to billing service
+        billingServiceGrpcClient.createBillingAccount(newPatient.getId().toString(), newPatient.getName(),
+                newPatient.getEmail());
+
+        // Send patient create event to kafka
+        kafkaProducer.sendEvent(newPatient);
 
         // End creating patient
         log.info("End creating patient with name={}", req.getName());

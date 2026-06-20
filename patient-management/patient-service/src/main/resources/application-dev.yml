@@ -1,5 +1,5 @@
 server:
-    port: ${DEV_SERVER_PORT}
+    port: ${PATIENT_SERVICE_DEV_PORT}
 
 spring:
     config:
@@ -35,6 +35,18 @@ spring:
 
         swagger-ui:
             enabled: true
+
+    billing:
+        service:
+            address: ${BILLING_SERVICE_ADDRESS}
+            grpc:
+                port: ${BILLING_SERVICE_GRPC_PORT}
+
+    kafka:
+        bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9094}
+        producer:
+            key-serializer: org.apache.kafka.common.serialization.StringSerializer
+            value-serializer: org.apache.kafka.common.serialization.ByteArraySerializer
 
 openapi:
     service:
