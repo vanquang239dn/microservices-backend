@@ -37,8 +37,6 @@ public class PatientController {
     @GetMapping("/list")
     public ResponseEntity<List<PatientResponse>> getPatient() {
 
-        log.info("Get patient list");
-
         List<PatientResponse> patients = patientService.getPatients();
 
         return ResponseEntity.ok().body(patients);
@@ -48,8 +46,6 @@ public class PatientController {
     @Operation(summary = "Create a new patient", description = "Returns a new patient")
     @PostMapping("/create")
     public ResponseEntity<PatientResponse> createPatient(@Valid @RequestBody PatientRequest req) {
-
-        log.info("Create a new patient");
 
         PatientResponse patientResponse = patientService.createPatient(req);
 
@@ -62,8 +58,6 @@ public class PatientController {
     public ResponseEntity<PatientResponse> updatePatient(@PathVariable UUID patientId,
             @Valid @RequestBody PatientRequest req) {
 
-        log.info("Update an exists patient");
-
         PatientResponse patientResponse = patientService.updatePatient(patientId, req);
 
         return ResponseEntity.ok().body(patientResponse);
@@ -73,8 +67,6 @@ public class PatientController {
     @Operation(summary = "Delete an exists patient with patient id", description = "Returns a deleted patient")
     @PutMapping("/delete/{patientId}")
     public ResponseEntity<PatientResponse> updatePatient(@PathVariable UUID patientId) {
-
-        log.info("Delete an exists patient");
 
         PatientResponse patientResponse = patientService.deletePatient(patientId);
 

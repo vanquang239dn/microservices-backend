@@ -1,5 +1,5 @@
 server:
-    port: ${PROD_SERVER_PORT}
+    port: ${PATIENT_SERVICE_PROD_PORT}
 
 spring:
     config:
