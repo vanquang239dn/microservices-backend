@@ -1,0 +1,43 @@
+server:
+  port: ${API_GATEWAY_DEV_PORT}
+
+spring:
+  application:
+    name: apigateway
+
+  config:
+    activate:
+      on-profile: dev
+
+  devtools:
+    add-properties: true
+
+  web:
+    error:
+      include-message: always
+      include-stacktrace: always
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            ## REST CLIENT     -> http://localhost:8084/api/patients
+            ## API GATEWAY     -> http://localhost:8080/patients
+            ## strip-prefix = 1 means api gateway will cut off /api
+            ## PATIENT SERVICE -> /patients
+            - id: patient-service-routes
+              uri: ${PATIENT_SERVICE_URL:http://localhost:8080}
+              predicates:
+                - Path=/api/patient/**
+              filters:
+                - StripPrefix=1
+
+              ## REST CLIENT -> http://localhost:8084/api-docs/patients
+              ## API GATEWAY -> http://localhost:8080/v3/api-docs
+            - id: api-docs-patient-routes
+              uri: http://localhost:8080
+              predicates:
+                - Path=/api-docs/patients
+              filters:
+                - SetPath=/v3/api-docs
