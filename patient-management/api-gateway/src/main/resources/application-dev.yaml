@@ -2,9 +2,6 @@ server:
   port: ${API_GATEWAY_DEV_PORT}
 
 spring:
-  application:
-    name: apigateway
-
   config:
     activate:
       on-profile: dev
@@ -16,28 +13,52 @@ spring:
     error:
       include-message: always
       include-stacktrace: always
+  auth:
+    service:
+      url: ${AUTH_SERVICE_URL}
 
   cloud:
     gateway:
       server:
         webflux:
           routes:
+            ## REST CLIENT     -> http://localhost:8084/auth/login
+            ## API GATEWAY     -> http://localhost:8085/login
+            ## strip-prefix = 1 means api gateway will cut off /api
+            ## PATIENT SERVICE -> /patients
+            - id: auth-service-route
+              uri: http://localhost:8085
+              predicates:
+                - Path=/auth/**
+              filters:
+                - StripPrefix=1
+
             ## REST CLIENT     -> http://localhost:8084/api/patients
             ## API GATEWAY     -> http://localhost:8080/patients
             ## strip-prefix = 1 means api gateway will cut off /api
             ## PATIENT SERVICE -> /patients
-            - id: patient-service-routes
+            - id: patient-service-route
               uri: ${PATIENT_SERVICE_URL:http://localhost:8080}
               predicates:
                 - Path=/api/patient/**
               filters:
+                - JwtValidation
                 - StripPrefix=1
 
-              ## REST CLIENT -> http://localhost:8084/api-docs/patients
-              ## API GATEWAY -> http://localhost:8080/v3/api-docs
-            - id: api-docs-patient-routes
+            ## REST CLIENT -> http://localhost:8084/api-docs/patients
+            ## API GATEWAY -> http://localhost:8080/v3/api-docs
+            - id: api-docs-patient-route
               uri: http://localhost:8080
               predicates:
-                - Path=/api-docs/patients
+                - Path=/api-docs/patient
               filters:
-                - SetPath=/v3/api-docs
+                - RewritePath=/api-docs/patient,/v3/api-docs
+
+            ## REST CLIENT -> http://localhost:8084/api-docs/patients
+            ## API GATEWAY -> http://localhost:8080/v3/api-docs
+            - id: api-docs-auth-route
+              uri: http://localhost:8085
+              predicates:
+                - Path=/api-docs/auth
+              filters:
+                - RewritePath=/api-docs/auth,/v3/api-docs

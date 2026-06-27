@@ -1,7 +1,9 @@
 spring:
   application:
-    name: apigateway
+    name: api-gateway
+
   main:
     banner-mode: console
+
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
